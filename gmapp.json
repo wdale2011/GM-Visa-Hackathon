@@ -1,0 +1,14 @@
+{
+  "name":"sabiotest1",
+  "id":"96186803",
+  "template": "Blank",
+  "version": "0.0.0",
+  "src": "src",
+  "dist": "dist",
+  "main": "index.html",
+  "icon": "Icon.png",
+  "developer": "Developer",
+  "category": "General",
+  "type": "RemoteHigh",
+  "description": "Generated on 2018-11-21 13:36:58 by ngi-sdk version 1.6.0"
+}
