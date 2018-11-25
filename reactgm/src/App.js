@@ -6,7 +6,6 @@ const gm = window.gm;
 
 class App extends Component {
   state = {
-    vin: "pending...",
     login: false,
     showRegister: false
   };
