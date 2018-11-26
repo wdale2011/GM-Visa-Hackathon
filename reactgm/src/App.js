@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
+import MapCTC from "./MapCTC";
+import axios from "axios";
+import styles from "./App.module.css";
+import Register from "./Register";
 
 import CurrentLocation from "./Map";
 
@@ -7,7 +11,9 @@ export class MapContainer extends Component {
   state = {
     showingInfoWindow: false,
     activeMarker: {},
-    selectedPlace: {}
+    selectedPlace: {},
+    login: false,
+    showRegister: false
   };
 
   onMarkerClick = (props, marker, e) =>
@@ -26,8 +32,20 @@ export class MapContainer extends Component {
     }
   };
 
+  showRegister = () => {
+    this.setState({ showRegister: true, login: false });
+  };
+
+  register = () => {
+    this.setState({
+      showRegister: false,
+      login: true
+    });
+  };
+
   render() {
     return (
+      <React.Fragment>
       <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
         <Marker onClick={this.onMarkerClick} name={"current location"} />
         <InfoWindow
@@ -39,7 +57,17 @@ export class MapContainer extends Component {
             <h4>{this.state.selectedPlace.name}</h4>
           </div>
         </InfoWindow>
-      </CurrentLocation>
+          </CurrentLocation>
+      <div className={styles.root}>
+      {this.state.login ? "Welcome John Doe!" : null}
+      <br />
+      {this.state.showRegister ? (
+        <Register register={this.register} />
+      ) : (
+        <button onClick={this.showRegister}>Register for CarToCar</button>
+      )}
+    </div>
+      </React.Fragment>
     );
   }
 }
