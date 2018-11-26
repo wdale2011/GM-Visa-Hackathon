@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import MapCTC from "./MapCTC";
+import axios from "axios";
 import styles from "./App.module.css";
 import Register from "./Register";
 
@@ -14,6 +16,14 @@ class App extends Component {
   componentDidMount() {
     const vin = gm.info.getVIN();
     this.setState({ vin });
+    axios
+      .get("http://localhost:53833/api/test?message=woot")
+      .then(resp => {
+        this.setState({ message: resp.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   handleClose = () => {
@@ -33,6 +43,9 @@ class App extends Component {
 
   render() {
     return (
+      <React.Fragment>
+        <MapCTC />
+      
       <div className={styles.root}>
         {this.state.login ? "Welcome John Doe!" : null}
         <br />
@@ -42,6 +55,7 @@ class App extends Component {
           <button onClick={this.showRegister}>Register for CarToCar</button>
         )}
       </div>
+      </React.Fragment>
     );
   }
 }
