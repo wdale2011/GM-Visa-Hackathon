@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import MapCTC from "./MapCTC";
 import axios from "axios";
+import styles from "./App.module.css";
+import Register from "./Register";
 
 const gm = window.gm;
 
 class App extends Component {
   state = {
-    // vin: "pending...",
-    // message: ""
+    vin: "pending...",
+    login: false,
+    showRegister: false
   };
 
   componentDidMount() {
@@ -27,10 +30,31 @@ class App extends Component {
     gm.system.closeApp();
   };
 
+  showRegister = () => {
+    this.setState({ showRegister: true, login: false });
+  };
+
+  register = () => {
+    this.setState({
+      showRegister: false,
+      login: true
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
         <MapCTC />
+      
+      <div className={styles.root}>
+        {this.state.login ? "Welcome John Doe!" : null}
+        <br />
+        {this.state.showRegister ? (
+          <Register register={this.register} />
+        ) : (
+          <button onClick={this.showRegister}>Register for CarToCar</button>
+        )}
+      </div>
       </React.Fragment>
     );
   }
