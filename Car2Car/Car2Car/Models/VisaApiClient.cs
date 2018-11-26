@@ -57,7 +57,7 @@ namespace Car2Car.Models
             string requestURL = ConfigurationManager.AppSettings["visaUrl"] + path;
             string userId = ConfigurationManager.AppSettings["userId"];
             string password = ConfigurationManager.AppSettings["password"];
-            string certificatePath = ConfigurationManager.AppSettings["cert"];
+            string certificatePath = HttpContext.Current.Server.MapPath(ConfigurationManager.AppSettings["cert"]);
             string certificatePassword = ConfigurationManager.AppSettings["certPassword"];
             string statusCode = "";
             LogRequest(requestURL, requestBodyString);

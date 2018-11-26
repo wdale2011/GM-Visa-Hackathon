@@ -11,7 +11,7 @@ namespace Car2Car.Controllers.Api
     public class DefaultCarApiController : ApiController
     {
         
-        [Route("visa/test"), HttpGet]
+        [Route("visa/test"), HttpPost]
 
         public HttpResponseMessage Post()
         {
@@ -22,7 +22,7 @@ namespace Car2Car.Controllers.Api
                        + "\"systemsTraceAuditNumber\":350420,"
                        + "\"retrievalReferenceNumber\":\"401010350420\","
                        + "\"localTransactionDateTime\":\"" + strDate + "\","
-                       + "\"acquiringBin\":409999,\"acquirerCountryCode\":\"101\","
+                       + "\"acquiringBin\":408999,\"acquirerCountryCode\":\"101\","
                        + "\"senderAccountNumber\":\"1234567890123456\","
                        + "\"senderCountryCode\":\"USA\","
                        + "\"transactionCurrencyCode\":\"USD\","
@@ -57,7 +57,7 @@ namespace Car2Car.Controllers.Api
            
 
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.OK, status);
 
         }
 

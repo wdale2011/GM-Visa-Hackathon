@@ -4,10 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
-<<<<<<< HEAD
-=======
     "bootstrap": "^4.1.3",
->>>>>>> origin/master
     "core-js": "^2.5.7",
     "google-maps-react": "^2.0.2",
     "react": "^16.6.3",
