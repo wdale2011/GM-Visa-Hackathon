@@ -1,21 +1,17 @@
 import React, { Component } from "react";
-import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
-import MapCTC from "./MapCTC";
-import axios from "axios";
-import styles from "./App.module.css";
-import Register from "./Register";
+import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 
-import CurrentLocation from "./Map";
+const mapStyles = {
+  width: "100%",
+  height: "100%"
+};
 
 export class MapContainer extends Component {
   state = {
-    showingInfoWindow: false,
-    activeMarker: {},
-    selectedPlace: {},
-    login: false,
-    showRegister: false
+    showingInfoWindow: false, //Hides or the shows the infoWindow
+    activeMarker: {}, //Shows the active marker upon click
+    selectedPlace: {} //Shows the infoWindow to the selected place upon a marker
   };
-
   onMarkerClick = (props, marker, e) =>
     this.setState({
       selectedPlace: props,
@@ -31,23 +27,18 @@ export class MapContainer extends Component {
       });
     }
   };
-
-  showRegister = () => {
-    this.setState({ showRegister: true, login: false });
-  };
-
-  register = () => {
-    this.setState({
-      showRegister: false,
-      login: true
-    });
-  };
-
   render() {
     return (
-      <React.Fragment>
-      <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
-        <Marker onClick={this.onMarkerClick} name={"current location"} />
+      <Map
+        google={this.props.google}
+        zoom={19}
+        style={mapStyles}
+        initialCenter={{ lat: -1.2884, lng: 36.8233 }}
+      >
+        <Marker
+          onClick={this.onMarkerClick}
+          name={"Kenyatta International Convention Centre"}
+        />
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
@@ -57,17 +48,7 @@ export class MapContainer extends Component {
             <h4>{this.state.selectedPlace.name}</h4>
           </div>
         </InfoWindow>
-          </CurrentLocation>
-      <div className={styles.root}>
-      {this.state.login ? "Welcome John Doe!" : null}
-      <br />
-      {this.state.showRegister ? (
-        <Register register={this.register} />
-      ) : (
-        <button onClick={this.showRegister}>Register for CarToCar</button>
-      )}
-    </div>
-      </React.Fragment>
+      </Map>
     );
   }
 }
