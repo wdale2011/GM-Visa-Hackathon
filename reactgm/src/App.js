@@ -33,7 +33,7 @@ export class MapContainer extends Component {
     }
   };
   componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 100);
+    this.timerID = setInterval(() => this.tick(), 50);
     // console.log(this.state.lat, this.state.long);
     // this.setState({ lat: this.state.lat++, long: this.state.long++ });
   }
@@ -59,6 +59,8 @@ export class MapContainer extends Component {
         long: (Number.parseFloat(this.state.long) + 0.000001).toPrecision(9)
       });
     } else {
+      console.log("clear");
+      clearInterval(this.timerID);
     }
   }
 
