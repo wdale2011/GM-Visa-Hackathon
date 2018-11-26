@@ -1,30 +1,49 @@
 import React, { Component } from "react";
-import styles from "./App.module.css";
+import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 
-const gm = window.gm;
+import CurrentLocation from "./Map";
 
-class App extends Component {
+export class MapContainer extends Component {
   state = {
-    vin: "pending..."
+    showingInfoWindow: false,
+    activeMarker: {},
+    selectedPlace: {}
   };
 
-  componentDidMount() {
-    const vin = gm.info.getVIN();
-    this.setState({ vin });
-  }
+  onMarkerClick = (props, marker, e) =>
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
 
-  handleClose = () => {
-    gm.system.closeApp();
+  onClose = props => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      });
+    }
   };
 
   render() {
     return (
-      <div className={styles.root}>
-        <div>VIN: {this.state.vin}</div>
-        <button onClick={this.handleClose}>Close</button>
-      </div>
+      <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
+        <Marker onClick={this.onMarkerClick} name={"current location"} />
+        <InfoWindow
+          marker={this.state.activeMarker}
+          visible={this.state.showingInfoWindow}
+          onClose={this.onClose}
+        >
+          <div>
+            <h4>{this.state.selectedPlace.name}</h4>
+          </div>
+        </InfoWindow>
+      </CurrentLocation>
     );
   }
 }
 
-export default App;
+export default GoogleApiWrapper({
+  apiKey: "AIzaSyCnSGSVwMPCkmk4jxgo7GnfPKiKnaVvz6Y"
+})(MapContainer);
