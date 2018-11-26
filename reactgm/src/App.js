@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
+import axios from "axios";
+import uber from "./untitled.png";
 
 const mapStyles = {
   width: "100%",
-  height: "100%"
+  height: "90%"
 };
 
 export class MapContainer extends Component {
@@ -14,7 +16,8 @@ export class MapContainer extends Component {
     movingLongitude: [34.164226],
     movingLatitude: [-118.624627],
     lat: 34.164225,
-    long: -118.624626
+    long: -118.624626,
+    requestGranted: false
   };
 
   onMarkerClick = (props, marker, e) =>
@@ -32,69 +35,97 @@ export class MapContainer extends Component {
       });
     }
   };
-  componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 50);
-    // console.log(this.state.lat, this.state.long);
-    // this.setState({ lat: this.state.lat++, long: this.state.long++ });
-  }
-
-  // class Clock extends React.Component {
-  //   constructor(props) {
-  //     super(props);
-  //     this.state = {date: new Date()};
-  //   }
-
-  // componentDidMount() {
-
-  // }
-
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
-
   tick() {
-    console.log(this.state.long);
     if (this.state.long < -118.62441) {
       this.setState({
         long: (Number.parseFloat(this.state.long) + 0.000001).toPrecision(9)
       });
     } else {
-      console.log("clear");
       clearInterval(this.timerID);
+      axios
+        .post("http://localhost:51757/visa/test")
+        .then(res => console.log("success"))
+        .catch(err => console.error(err));
     }
   }
 
+  makeRequest = () => {
+    this.setState({ requestGranted: true });
+  };
+  sendCar = () => {
+    this.setState({ requestGranted: false });
+    this.timerID = setInterval(() => this.tick(), 50);
+  };
   render() {
     return (
-      <Map
-        google={this.props.google}
-        zoom={19}
-        style={mapStyles}
-        initialCenter={{ lat: 34.164176, lng: -118.624557 }}
-      >
-        <Marker
-          position={{ lat: 34.164176, lng: -118.624557 }}
-          onClick={this.onMarkerClick}
-          name={"firstmarker"}
-        />
-        <Marker
-          position={{
-            lat: 34.164225,
-            lng: this.state.long
-          }}
-          onClick={this.onMarkerClick}
-          name={"Second Marker"}
-        />
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
+      <React.Fragment>
+        <Map
+          google={this.props.google}
+          zoom={19}
+          style={mapStyles}
+          initialCenter={{ lat: 34.164176, lng: -118.624557 }}
         >
-          <div>
-            <h4>{this.state.selectedPlace.name}</h4>
+          <Marker
+            position={{ lat: 34.164176, lng: -118.624557 }}
+            onClick={this.onMarkerClick}
+            name="hello"
+            icon={uber}
+          />
+          <Marker
+            position={{
+              lat: 34.164225,
+              lng: this.state.long
+            }}
+            onClick={this.onMarkerClick}
+            name={"Second Marker"}
+            icon={uber}
+          />
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+            onClose={this.onClose}
+          />
+        </Map>
+        {this.state.requestGranted && (
+          <div
+            style={{
+              width: "29%",
+              height: "100%",
+              position: "relative",
+              top: "15rem",
+              left: "2rem",
+              background: "lightblue",
+              textAlign: "center",
+              paddingTop: ".5px",
+              borderRadius: "22px"
+            }}
+          >
+            <h1>Request Granted</h1>
+            <button type="button" onClick={this.sendCar}>
+              Awesome!
+            </button>
           </div>
-        </InfoWindow>
-      </Map>
+        )}
+        <div>
+          <h4>{this.state.selectedPlace.name}</h4>
+        </div>
+        <button
+          type="button"
+          style={{
+            width: "29%",
+            height: "100%",
+            position: "relative",
+            top: "23rem",
+            left: "2rem"
+          }}
+          onClick={this.makeRequest}
+        >
+          {"May I pass for $5.00?"}
+        </button>
+      </React.Fragment>
     );
   }
 }
