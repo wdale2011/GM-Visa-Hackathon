@@ -1,0 +1,19 @@
+.root {
+    height: 100%;
+    width: 100%;
+  
+    display: grid;
+    grid-template-rows: auto 1fr;
+    
+    input {
+      margin-left: 0.5em;
+    }
+  }
+  .latLng {
+    margin-bottom: 1em;
+  }
+  .lng {
+    margin-left: 1em;
+  }
+  
+  
