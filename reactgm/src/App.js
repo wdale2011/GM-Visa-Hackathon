@@ -1,32 +1,34 @@
 import React, { Component } from "react";
+import { GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 import axios from "axios";
 import styles from "./App.module.css";
 import Register from "./Register";
 
-const gm = window.gm;
+import CurrentLocation from "./Map";
 
-class App extends Component {
+export class MapContainer extends Component {
   state = {
-    vin: "pending...",
+    showingInfoWindow: false,
+    activeMarker: {},
+    selectedPlace: {},
     login: false,
     showRegister: false
   };
 
-  componentDidMount() {
-    const vin = gm.info.getVIN();
-    this.setState({ vin });
-    axios
-      .get("http://localhost:53833/api/test?message=woot")
-      .then(resp => {
-        this.setState({ message: resp.data });
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }
+  onMarkerClick = (props, marker, e) =>
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
 
-  handleClose = () => {
-    gm.system.closeApp();
+  onClose = props => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      });
+    }
   };
 
   showRegister = () => {
@@ -43,6 +45,18 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <CurrentLocation centerAroundCurrentLocation google={this.props.google}>
+          <Marker onClick={this.onMarkerClick} name={"current location"} />
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+            onClose={this.onClose}
+          >
+            <div>
+              <h4>{this.state.selectedPlace.name}</h4>
+            </div>
+          </InfoWindow>
+        </CurrentLocation>
         <div className={styles.root}>
           {this.state.login ? "Welcome John Doe!" : null}
           <br />
@@ -57,4 +71,6 @@ class App extends Component {
   }
 }
 
-export default App;
+export default GoogleApiWrapper({
+  apiKey: "AIzaSyCnSGSVwMPCkmk4jxgo7GnfPKiKnaVvz6Y"
+})(MapContainer);
