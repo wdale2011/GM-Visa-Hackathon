@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./App.module.css";
 import Register from "./Register";
+import Container from "./maps/Container";
 
 const gm = window.gm;
 
@@ -33,6 +34,8 @@ class App extends Component {
   render() {
     return (
       <div className={styles.root}>
+        <div />
+        <Container />
         {this.state.login ? "Welcome John Doe!" : null}
         <br />
         {this.state.showRegister ? (
