@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { Map, GoogleApiWrapper, InfoWindow, Marker } from "google-maps-react";
 import axios from "axios";
 import uber from "./untitled.png";
+import redUber from "./redCar.png";
+import CarList from "./CarList";
+import Confirmation from "./Confirmation";
 
 const mapStyles = {
   width: "100%",
@@ -17,7 +20,9 @@ export class MapContainer extends Component {
     movingLatitude: [-118.624627],
     lat: 34.164225,
     long: -118.624626,
-    requestGranted: false
+    requestGranted: false,
+    showList: true,
+    confirm: false
   };
 
   onMarkerClick = (props, marker, e) =>
@@ -39,17 +44,15 @@ export class MapContainer extends Component {
     clearInterval(this.timerID);
   }
   tick() {
-    if (this.state.long < -118.62441) {
-      this.setState({
-        long: (Number.parseFloat(this.state.long) + 0.000001).toPrecision(9)
-      });
-    } else {
-      clearInterval(this.timerID);
-      axios
-        .post("http://localhost:51757/visa/test")
-        .then(res => console.log("success"))
-        .catch(err => console.error(err));
-    }
+    this.setState({
+      long: -118.62441
+    });
+
+    clearInterval(this.timerID);
+    axios
+      .post("http://localhost:51757/visa/test")
+      .then(res => this.setState({ confirm: true }))
+      .catch(err => console.error(err));
   }
 
   makeRequest = () => {
@@ -59,36 +62,43 @@ export class MapContainer extends Component {
     this.setState({ requestGranted: false });
     this.timerID = setInterval(() => this.tick(), 50);
   };
+  close = () => {
+    this.setState({ showList: false });
+  };
   render() {
     return (
       <React.Fragment>
-        <Map
-          google={this.props.google}
-          zoom={19}
-          style={mapStyles}
-          initialCenter={{ lat: 34.164176, lng: -118.624557 }}
-        >
-          <Marker
-            position={{ lat: 34.164176, lng: -118.624557 }}
-            onClick={this.onMarkerClick}
-            name="hello"
-            icon={uber}
-          />
-          <Marker
-            position={{
-              lat: 34.164225,
-              lng: this.state.long
-            }}
-            onClick={this.onMarkerClick}
-            name={"Second Marker"}
-            icon={uber}
-          />
-          <InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}
-            onClose={this.onClose}
-          />
-        </Map>
+        {this.state.showList ? (
+          <CarList close={this.close} />
+        ) : (
+          <Map
+            google={this.props.google}
+            zoom={19}
+            style={mapStyles}
+            initialCenter={{ lat: 34.164176, lng: -118.624557 }}
+          >
+            <Marker
+              position={{ lat: 34.164176, lng: -118.624557 }}
+              onClick={this.onMarkerClick}
+              name="hello"
+              icon={uber}
+            />
+            <Marker
+              position={{
+                lat: 34.164225,
+                lng: this.state.long
+              }}
+              onClick={this.onMarkerClick}
+              name={"Second Marker"}
+              icon={redUber}
+            />
+            <InfoWindow
+              marker={this.state.activeMarker}
+              visible={this.state.showingInfoWindow}
+              onClose={this.onClose}
+            />
+          </Map>
+        )}
         {this.state.requestGranted && (
           <div
             style={{
@@ -125,6 +135,7 @@ export class MapContainer extends Component {
         >
           {"May I pass for $5.00?"}
         </button>
+        }{this.state.confirm && <Confirmation />}
       </React.Fragment>
     );
   }
