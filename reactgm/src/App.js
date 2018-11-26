@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import MapCTC from "./MapCTC";
 import axios from "axios";
 import styles from "./App.module.css";
 import Register from "./Register";
@@ -43,9 +42,6 @@ class App extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <MapCTC />
-      
       <div className={styles.root}>
         {this.state.login ? "Welcome John Doe!" : null}
         <br />
@@ -55,7 +51,6 @@ class App extends Component {
           <button onClick={this.showRegister}>Register for CarToCar</button>
         )}
       </div>
-      </React.Fragment>
     );
   }
 }
