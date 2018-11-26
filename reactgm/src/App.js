@@ -1,16 +1,26 @@
 import React, { Component } from "react";
-import styles from "./App.module.css";
+import MapCTC from "./MapCTC";
+import axios from "axios";
 
 const gm = window.gm;
 
 class App extends Component {
   state = {
-    vin: "pending..."
+    // vin: "pending...",
+    // message: ""
   };
 
   componentDidMount() {
     const vin = gm.info.getVIN();
     this.setState({ vin });
+    axios
+      .get("http://localhost:53833/api/test?message=woot")
+      .then(resp => {
+        this.setState({ message: resp.data });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   handleClose = () => {
@@ -19,10 +29,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className={styles.root}>
-        <div>VIN: {this.state.vin}</div>
-        <button onClick={this.handleClose}>Close</button>
-      </div>
+      <React.Fragment>
+        <MapCTC />
+      </React.Fragment>
     );
   }
 }
